@@ -1,26 +1,25 @@
 <?php
 
 require 'functions.php';
+//require 'router.php';
 
-$uri = parse_url($_SERVER['REQUEST_URI'])['path'];
+//connect to db
+
+$dsn = "mysql:host=localhost:3306; dbname=phpcourse; sharset=utf8mb4";
+
+$pdo = new PDO($dsn, 'root', 'todami1');
+
+$statement = $pdo->prepare("SELECT * FROM posts;");
+
+$statement -> execute();
+
+$posts = $statement ->fetchAll(PDO::FETCH_ASSOC);
 
 
-$routes = [
-
-    '/' => 'controllers/index.php',
-    '/about' => 'controllers/about.php',
-    '/contact' => 'controllers/contact.php',
-
-];
-
-if (array_key_exists($uri, $routes)){
-
-    require $routes[$uri];
-
-} else {
-
-    http_response_code(404);
-    require 'views/404.php';
-    die();
+echo '<ol>';
+foreach ($posts as $post){
+    
+    echo '<li>' . $post['title'] . '</li>';
 
 }
+echo '</ol>';
